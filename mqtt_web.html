@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MQTT Live Data</title>
+    <script src="https://unpkg.com/paho-mqtt/mqttws31.min.js"></script>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+    <h2>MQTT Live Data Viewer</h2>
+    <h3>Topic: <span id="topic">vivek/location</span></h3>
+
+    <div id="output" 
+         style="padding: 20px; border: 2px solid black; width: 350px; height: 120px;">
+    </div>
+
+    <script>
+        client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "webclient_" + Math.random());
+
+        client.connect({
+            onSuccess: function() {
+                console.log("Connected to MQTT broker");
+                client.subscribe("vivek/location");
+            }
+        });
+
+        client.onMessageArrived = function(message) {
+            console.log("Received: " + message.payloadString);
+            document.getElementById("output").innerHTML = 
+                "<b>Received Data:</b><br>" + message.payloadString;
+        };
+    </script>
+</body>
+</html>
